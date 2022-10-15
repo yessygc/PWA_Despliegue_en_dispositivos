@@ -67,7 +67,7 @@ self.addEventListener('activate', e => {
 
 
 
-self.addEventListenes('fetch', e => {
+self.addEventListener('fetch', e => {
 
     
     const respuesta = caches.match( e.request ).then( res => {
