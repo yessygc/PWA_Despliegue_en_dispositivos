@@ -1,4 +1,5 @@
-
+// imports
+importScripts('js/sw-utils.js');
 
 
 const STATIC_CACHE = 'static-v1';
@@ -15,7 +16,8 @@ const APP_SHELL = [
     'igm/avatars/spiderman.jpg',
     'igm/avatars/thor.jpg',
     'igm/avatars/wolverine.jpg',
-    'js/app.js'
+    'js/app.js',
+    'js/sw-utils.js'
 ];
 
 
@@ -55,11 +57,41 @@ self.addEventListener('activate', e => {
                 return caches.delete(key);
             }
         });
+
     });
 
     e.waitUntil( respuesta );
+    
+});
 
 
+
+
+self.addEventListenes('fetch', e => {
 
     
+    const respuesta = caches.match( e.request ).then( res => {
+
+
+        if ( res ) {
+            return res; 
+        } else {
+
+            return fetch( e.request ).then( newRes => {
+
+                return actualizaCacheDinamico( DYNAMIC_CACHE, e.request, newRes );
+
+            });
+        }
+
+        console.log(res);
+
+
+    });
+
+
+
+
+    e.respondWith( respuesta );
+
 });
